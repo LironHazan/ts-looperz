@@ -123,6 +123,50 @@
           }
         }
       }
-    }},
-  "defaultProject": "ts-looperz"
+    },
+    "guitar-looper": {
+      "projectType": "library",
+      "root": "projects/guitar-looper",
+      "sourceRoot": "projects/guitar-looper/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/guitar-looper/tsconfig.lib.json",
+            "project": "projects/guitar-looper/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/guitar-looper/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/guitar-looper/src/test.ts",
+            "tsConfig": "projects/guitar-looper/tsconfig.spec.json",
+            "karmaConfig": "projects/guitar-looper/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/guitar-looper/tsconfig.lib.json",
+              "projects/guitar-looper/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "ts-looperz",
+  "cli": {
+    "analytics": false
+  }
 }
