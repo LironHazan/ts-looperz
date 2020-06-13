@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'lib-guitar-looper',
@@ -8,7 +8,8 @@ import { Component, OnInit } from '@angular/core';
         <lib-stomp-btn stomp></lib-stomp-btn>
       </lib-looper-pedal>
     `,
-  styleUrls: ['./guitar-looper.component.css']
+  styleUrls: ['./guitar-looper.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GuitarLooperComponent implements OnInit {
 

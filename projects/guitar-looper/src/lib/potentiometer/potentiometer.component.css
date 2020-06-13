@@ -1,0 +1,25 @@
+svg {
+  cursor: grab;
+  --knob-angle: 0deg;
+}
+#rotating {
+  stroke: #979797;
+  fill: #FFFFFF;
+
+  transform-origin: center;
+  transform: rotate(var(--knob-angle));
+}
+.hide-input {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+}
+.knob {
+  stroke: #464648;
+  fill: #121117;
+}
+.hide-input:focus + .knob {
+  stroke: red;
+}

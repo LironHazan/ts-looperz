@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'lib-stomp-btn',
@@ -17,7 +17,8 @@ import { Component, OnInit } from '@angular/core';
       </g>
     </svg>
   `,
-  styleUrls: ['./stomp-btn.component.css']
+  styleUrls: ['./stomp-btn.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class StompBtnComponent implements OnInit {
 
