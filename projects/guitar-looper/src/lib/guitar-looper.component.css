@@ -11,3 +11,8 @@ lib-stomp-btn {
   position: absolute;
   transform: translate(97px, 372px);
 }
+
+lib-led {
+  position: absolute;
+  transform: translate(135px, 282px);
+}

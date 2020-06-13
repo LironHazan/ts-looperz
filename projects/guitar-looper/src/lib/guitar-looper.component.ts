@@ -6,6 +6,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
       <lib-looper-pedal>
         <lib-potentiometer potentiometer></lib-potentiometer>
         <lib-stomp-btn stomp></lib-stomp-btn>
+        <lib-led led></lib-led>
       </lib-looper-pedal>
     `,
   styleUrls: ['./guitar-looper.component.css'],

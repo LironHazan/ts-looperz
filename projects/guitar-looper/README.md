@@ -1,5 +1,10 @@
 # GuitarLooper
 
+Based on the Ditto looper of tc electronic (which I sold few months ago but I liked as a product..)
+
+![image](https://github.com/LironHazan/ts-looperz/blob/master/src/assets/litto-for-readme.png?raw=true)
+
+
 This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.11.
 
 ## Code scaffolding
