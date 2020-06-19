@@ -1,15 +1,10 @@
 import { NgModule } from '@angular/core';
-import { GuitarLooperComponent } from './guitar-looper.component';
-import { PotentiometerComponent } from './potentiometer/potentiometer.component';
-import { LooperPedalComponent } from './pedal/looper-pedal.component';
-import { StompBtnComponent } from './stomp-btn/stomp-btn.component';
-
-
+import {LooperPedalComponent} from './looper-pedal.component';
 
 @NgModule({
-  declarations: [GuitarLooperComponent, PotentiometerComponent, LooperPedalComponent, StompBtnComponent],
+  declarations: [LooperPedalComponent],
   imports: [
   ],
-  exports: [GuitarLooperComponent, PotentiometerComponent]
+  exports: [LooperPedalComponent]
 })
 export class GuitarLooperModule { }

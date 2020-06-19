@@ -1,12 +1,28 @@
-svg {
+:host{
+  position: relative;
   cursor: grab;
   --knob-angle: 0deg;
 }
+
+#zoom-pedal {
+  transform-origin: 0 0;
+}
+
+.stomp-btn {
+ transform: translate(50px, 360px);
+}
+.push-area {
+  cursor: pointer;
+}
+
+/*.potentiometer {*/
+/*  transform: translate(75px, 44px);*/
+/*}*/
 #rotating {
   stroke: #979797;
   fill: #FFFFFF;
 
-  transform-origin: center;
+  transform-origin: 18% 8%;
   transform: rotate(var(--knob-angle));
 }
 .hide-input {
