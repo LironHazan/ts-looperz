@@ -1,5 +1,7 @@
-import {Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostListener, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {GuitarLooperService} from './guitar-looper.service';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 // !! some of the functions are taken from https://github.com/vitaliy-bobrov/js-rocks knob component
 // used https://github.com/wokwi/wokwi-elements potentiometer-element as main reference..
@@ -8,20 +10,35 @@ interface Point {
   x: number;
   y: number;
 }
-type LooperState = 'idle' | 'rec' | 'overlap' | 'stop' | 'cleared'; // todo: enum
+
+export enum State {
+  idle = 'idle',
+  rec = 'rec',
+  overlap = 'overlap',
+  stop = 'stop',
+  cleared = 'cleared'
+}
+
+export interface RecChannel {
+  index: number; // Max 5
+  playable: HTMLAudioElement;
+  blob: Blob;
+}
 
 // Based on the Ditto looper of tc electronic (which I sold few months ago but I liked as a product..)
 @Component({
-  selector: 'lib-looper-pedal',
+  selector: 'app-looper-pedal',
   templateUrl: './looper-pedal.component.html',
   styleUrls: ['./looper-pedal.component.css']
 })
-export class LooperPedalComponent implements OnInit {
+export class LooperPedalComponent implements OnInit, OnDestroy {
   @ViewChild('knob', { read: ElementRef, static: true }) knob;
   @ViewChild('input', { read: ElementRef, static: true }) input;
   private zoomRange: 100;
   private center: Point = { x: 0, y: 0 };
   private pressed = false;
+  private ngUnSubscribe: Subject<void> = new Subject<void>();
+
 
   // State machine:
   // White: idle --> press to record
@@ -30,7 +47,8 @@ export class LooperPedalComponent implements OnInit {
   // Red : recording --> X5 times
   // double press to stop
   // single press after double to delete
-  private looperState: LooperState = 'idle';
+  private lineRef: MediaStreamAudioSourceNode;
+  private looperState: State = State.idle;
   ledColor = '#998B7F';
 
   @Input() min = 0;
@@ -44,7 +62,13 @@ export class LooperPedalComponent implements OnInit {
 
   constructor(private looperService: GuitarLooperService) { }
 
-  ngOnInit(): void {
+  async ngOnInit()  {
+    this.looperService.onRecStop
+      .pipe(takeUntil(this.ngUnSubscribe))
+      .subscribe((chunks) => {
+      this.onRecStop(chunks, {} as RecChannel);
+    });
+    this.lineRef = await this.looperService.setup();
   }
 
   @HostListener('focus')
@@ -140,12 +164,12 @@ export class LooperPedalComponent implements OnInit {
 
   private handleIdle() {
     this.ledColor = '#E31111';
-    this.looperState = 'rec';
+    this.looperState = State.rec;
   }
 
   private handleRec() {
     this.ledColor = '#FBFF6E';
-    this.looperState = 'overlap';
+    this.looperState = State.overlap;
 
   }
 
@@ -155,21 +179,43 @@ export class LooperPedalComponent implements OnInit {
 
   changeLoopState() {
     switch (this.looperState) {
-      case 'idle':
+      case State.idle:
         this.handleIdle();
         break;
-      case 'rec':
+      case State.rec:
         this.handleRec();
         break;
-      case 'overlap':
+      case State.overlap:
         this.handleOverlap();
         break;
-      case 'stop':
+      case State.stop:
         this.handleStop();
         break;
-      case 'cleared':
+      case State.cleared:
         this.handleClear();
         break;
+    }
+  }
+
+  onRecStop(chunks: Blob[], channel: RecChannel) {
+    channel.blob = new Blob(chunks, {
+        type : 'audio/ogg; codecs=opus',
+      });
+      // Reset chunks
+    chunks = [];
+
+    const src = channel.blob &&  URL.createObjectURL(channel.blob);
+    if (!src) { return; }
+    channel.playable = new Audio(src);
+    channel.playable.loop =  true;
+    channel.playable.play();
+  }
+
+  ngOnDestroy(): void {
+    this.ngUnSubscribe.next();
+    this.ngUnSubscribe.complete();
+    if (this.lineRef) {
+      this.lineRef.disconnect();
     }
   }
 
